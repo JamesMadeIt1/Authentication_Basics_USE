@@ -1,7 +1,7 @@
 const userModel = require('../Models/user.model');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const { hashPassword, comparePassword } = require('../Authentication/Auth');
 
 const registerUser = async (req, res, next) => {
     const registerSchema = Joi.object({
@@ -24,8 +24,7 @@ const registerUser = async (req, res, next) => {
             return res.status(409).json({ message: 'User already exists' });
         }
 
-        const salt = await bcrypt.genSalt(12);
-        const hashedPassword = await bcrypt.hash(Password, salt);
+        const hashedPassword = await hashPassword(Password);
 
         const newUser = new userModel({
             Name,
@@ -63,7 +62,7 @@ const logInUser = async (req, res, next) => {
             return res.status(404).json({ message: 'User does not exist' });
         }
 
-        const isMatch = await bcrypt.compare(Password, user.Password);
+        const isMatch = await comparePassword(Password, user.Password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }

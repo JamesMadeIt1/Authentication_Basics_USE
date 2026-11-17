@@ -1,12 +1,15 @@
-const Salt = await bcrypt.genSalt(10);
-const Hash = await bcrypt.hash(password, Salt);
+const bcrypt = require('bcrypt');
 
-user.password = Hash;
-await user.save();
+const hashPassword = async (password) => {
+    const salt = await bcrypt.genSalt(12);
+    return bcrypt.hash(password, salt);
+};
 
+const comparePassword = (password, hashedPassword) => {
+    return bcrypt.compare(password, hashedPassword);
+};
 
-//login
-
-const isMatch = await bcrypt.compare(plainPassword, user.password);
-if(!isMatch) {
-    throw new Error('Invalid credentials')} ;
+module.exports = {
+    hashPassword,
+    comparePassword
+};
