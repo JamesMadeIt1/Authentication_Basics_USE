@@ -1,18 +1,10 @@
-const mongoose =require('mongoose');
+const mongoose = require('mongoose');
 
-const ConnectDB = async () =>{
-    try {
-        const mongoUrl = process.env.MONGODB_URL;
-        if (!mongoUrl) {
-            throw new Error('MONGODB_URL is not defined in the environment');
-        }
+const ConnectDB = async () => {
+    const mongoUrl = process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/authentication_basics';
 
-        await mongoose.connect(mongoUrl);
-        console.log('MongoDB Connection Successful')
-    } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-        process.exit(1)    
-    }
-}
+    await mongoose.connect(mongoUrl);
+    console.log('MongoDB Connection Successful');
+};
 
 module.exports = ConnectDB;
